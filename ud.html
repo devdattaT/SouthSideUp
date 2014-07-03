@@ -1,0 +1,66 @@
+<HTML>
+<HEAD>
+</HEAD>
+<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+<style>
+	#map { height: 680px;
+		width: 850px;}
+
+  </style>
+ <script>
+	var map;
+	var proxy="rotate.php?img=";
+	function init(){
+	 map = L.map('map');
+	 
+	var MapQuestOpen_Aerial = L.tileLayer.ud(proxy+'http://oatile{s}.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', {
+	attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency',
+	subdomains: '1234'
+}); 
+	 var Hydda_Base = L.tileLayer.ud(proxy+'http://{s}.tile.openstreetmap.se/hydda/base/{z}/{x}/{y}.png', {
+	minZoom: 0,
+	maxZoom: 18,
+	attribution: 'Tiles courtesy of <a href="http://hot.openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+});
+
+	var MapQuestOpen_OSM = L.tileLayer.ud(proxy+'http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', {
+	attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+	subdomains: '1234'
+})
+	map.setView([-25,-80], 5);
+	//MapQuestOpen_OSM.addTo(map);
+	MapQuestOpen_Aerial.addTo(map);
+	//Hydda_Base.addTo(map);
+	};
+	
+L.TileLayer.ud = L.TileLayer.extend({
+	
+	getTileUrl: function (tilePoint) {
+		var z=tilePoint.z;
+		var x=Math.pow(2,z)-tilePoint.x-1;
+		var y=Math.pow(2,z)-tilePoint.y-1;
+		
+		return L.Util.template(this._url, L.extend({
+			s: this._getSubdomain(tilePoint),
+			z: z,
+			x: x,
+			y: y
+		}, this.options));
+	}
+
+});
+
+L.tileLayer.ud = function (url, options) {
+	return new L.TileLayer.ud(url, options);
+};	
+	
+	
+
+</script>
+
+
+<BODY  onload="init()">
+<div id="map"/>
+</BODY>
+</HTML>
