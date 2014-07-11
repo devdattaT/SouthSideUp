@@ -1,12 +1,18 @@
 <?php
-    $filename = $_GET["img"];
+    error_reporting(E_ALL);
+    
+    try{$filename = $_GET["img"];
     $rotang = 180; // Rotation angle
 	$isPNG=endsWith($filename, "png");
+    
 	if($isPNG){
 		$source = imagecreatefrompng($filename) or die('Error opening file '.$filename);
 	}else{
+        
 		$source = imagecreatefromjpeg($filename) or die('Error opening file '.$filename);
+        
 	}
+    
     imagealphablending($source, false);
     imagesavealpha($source, true);
 
@@ -22,6 +28,9 @@
     imagepng($rotation);
     imagedestroy($source);
     imagedestroy($rotation);
+    }catch (Exception $e) {
+    echo 'Caught exception: ',  $e->getMessage(), "\n";
+}
 	
 	
 	function endsWith($haystack, $needle)
